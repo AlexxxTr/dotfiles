@@ -102,3 +102,7 @@ eval "$(fnm env --use-on-cd --shell zsh)"
 
 eval "$(zoxide init zsh)"
 eval "$(fzf --zsh)"
+
+# Tmux sessionizer script 
+PATH="$PATH":"$HOME/.local/scripts/"
+bindkey -s ^f "tmux-sessionizer.sh\n"
