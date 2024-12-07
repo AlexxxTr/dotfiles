@@ -1,7 +1,9 @@
 # Add deno completions to search path
-if [[ ":$FPATH:" != *":/home/aletru/.zsh/completions:"* ]]; then export FPATH="/home/aletru/.zsh/completions:$FPATH"; fi
+if [[ ":$FPATH:" != *":$HOME/.zsh/completions:"* ]]; then export FPATH="$HOME/.zsh/completions:$FPATH"; fi
 
-eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+if [ -d "/home/linuxbrew/.linuxbrew/bin" ]; then
+	eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+fi
 
 ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
 
@@ -87,7 +89,7 @@ export PYENV_ROOT="$HOME/.pyenv"
 eval "$(pyenv init -)"
 
 # pnpm
-export PNPM_HOME="/home/aletru/.local/share/pnpm"
+export PNPM_HOME="$HOME/.local/share/pnpm"
 case ":$PATH:" in
   *":$PNPM_HOME:"*) ;;
   *) export PATH="$PNPM_HOME:$PATH" ;;
@@ -96,7 +98,9 @@ esac
 #
 # Enable fzf keybindings
 
-. "/home/aletru/.deno/env"
+if [ -d "$HOME/.deno/env" ]; then
+    . "$HOME/.deno/env"
+fi
 
 eval "$(fnm env --use-on-cd --shell zsh)"
 
@@ -106,3 +110,14 @@ eval "$(fzf --zsh)"
 # Tmux sessionizer script 
 PATH="$PATH":"$HOME/.local/scripts/"
 bindkey -s ^f "tmux-sessionizer.sh\n"
+
+# fnm
+FNM_PATH="$HOME/.local/share/fnm"
+if [ -d "$FNM_PATH" ]; then
+  export PATH="$HOME/.local/share/fnm:$PATH"
+  eval "`fnm env`"
+fi
+
+# manual neovim install
+export PATH=$PATH:/opt/nvim-linux64/bin
+export PATH=$PATH:$HOME/.local/bin

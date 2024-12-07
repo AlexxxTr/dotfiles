@@ -74,7 +74,7 @@ return {
                 "html",
                 "gopls",
                 "pyright",
-                "ruff_lsp",
+                "ruff",
             },
             handles = {
                 lsp.default_setup,
@@ -105,10 +105,10 @@ return {
                         },
                     })
                 end,
-                ruff_lsp = function()
-                    require("lspconfig").ruff_lsp.setup({
+                ruff = function()
+                    require("lspconfig").ruff.setup({
                         on_attach = function(client, _)
-                            if client.name == "ruff_lsp" then
+                            if client.name == "ruff" then
                                 client.server_capabilities.hoverProvider = false
                             end
                         end,
@@ -129,7 +129,7 @@ return {
             "html",
             "gopls",
             "pyright",
-            "ruff_lsp",
+            "ruff",
         })
 
         local cmp = require("cmp")
