@@ -75,6 +75,7 @@ return {
                 "gopls",
                 "pyright",
                 "ruff",
+                "ansiblels",
             },
             handles = {
                 lsp.default_setup,
@@ -130,6 +131,7 @@ return {
             "gopls",
             "pyright",
             "ruff",
+            "ansiblels",
         })
 
         local cmp = require("cmp")
