@@ -22,24 +22,33 @@ return {
 		{ "williamboman/mason.nvim" },
 		{ "williamboman/mason-lspconfig.nvim" },
 
-		-- Autocompletion
-		{ "hrsh7th/nvim-cmp" },
-		{ "hrsh7th/cmp-cmdline" },
-		{ "hrsh7th/cmp-buffer" },
-		{ "hrsh7th/cmp-path" },
-		{ "saadparwaiz1/cmp_luasnip" },
-		{ "hrsh7th/cmp-nvim-lsp" },
-		{ "hrsh7th/cmp-nvim-lua" },
+		-- Autocompletion and snippets
+		{
+			"saghen/blink.cmp",
+			dependencies = "rafamadriz/friendly-snippets",
+			version = "v0.*",
+			opts = {
+				keymap = { preset = "default" },
 
-		-- Snippets
-		{ "L3MON4D3/LuaSnip" },
-		{ "rafamadriz/friendly-snippets" },
+				appearance = {
+					use_nvim_cmp_as_default = true,
+					nerd_font_variant = "mono",
+				},
+				sources = {
+					default = { "lsp", "path", "snippets", "buffer" },
+				},
+
+				signature = { enabled = true },
+			},
+			opts_extend = { "sources.default" },
+		},
 	},
 	config = function()
 		local lsp = require("lsp-zero")
+		local lsp_config = require("lspconfig")
 		lsp.extend_lspconfig()
 
-		lsp.on_attach(function(client, bufnr)
+		lsp.on_attach(function(_, bufnr)
 			lsp.default_keymaps({ buffer = bufnr })
 
 			local opts = { buffer = bufnr, remap = false }
@@ -76,13 +85,41 @@ return {
 			end, opts)
 		end)
 
+		lsp_config.lua_ls.setup({
+			settings = {
+				Lua = {
+					runtime = {
+						-- Tell the language server which version of Lua you're using
+						-- (most likely LuaJIT in the case of Neovim)
+						version = "LuaJIT",
+					},
+					diagnostics = {
+						-- Get the language server to recognize the `vim` global
+						globals = {
+							"vim",
+							"require",
+						},
+					},
+					workspace = {
+						-- Make the server aware of Neovim runtime files
+						library = vim.api.nvim_get_runtime_file("", true),
+					},
+					-- Do not send telemetry data containing a randomized but unique identifier
+					telemetry = {
+						enable = false,
+					},
+				},
+			},
+		})
+
 		require("mason").setup()
 		require("mason-lspconfig").setup({
+			automatic_installation = true,
 			ensure_installed = lsp_servers,
 			handles = {
 				lsp.default_setup,
 				ts_ls = function()
-					require("lspconfig").ts_ls.setup({
+					lsp_config.ts_ls.setup({
 						settings = {
 							completions = {
 								completeFunctionCalls = true,
@@ -92,10 +129,10 @@ return {
 				end,
 				lua_ls = function()
 					local lua_opts = lsp.nvim_lua_ls()
-					require("lspconfig").lua_ls.setup(lua_opts)
+					lsp_config.lua_ls.setup(lua_opts)
 				end,
 				pyright = function()
-					require("lspconfig").pyright.setup({
+					lsp_config.pyright.setup({
 						settings = {
 							pyright = {
 								disableOrganizeImports = true,
@@ -109,7 +146,7 @@ return {
 					})
 				end,
 				ruff = function()
-					require("lspconfig").ruff.setup({
+					lsp_config.ruff.setup({
 						on_attach = function(client, _)
 							if client.name == "ruff" then
 								client.server_capabilities.hoverProvider = false
@@ -122,58 +159,9 @@ return {
 
 		lsp.setup_servers(lsp_servers)
 
-		local cmp = require("cmp")
-		local cmp_select = { behavior = cmp.SelectBehavior.Select }
-
-		require("luasnip.loaders.from_vscode").lazy_load()
-
-		cmp.setup({
-			sources = {
-				{ name = "nvim_lsp" },
-				{ name = "luasnip" },
-                { name = "buffer", keyword_length = 2 },
-			},
-			window = {
-				completion = cmp.config.window.bordered(),
-				documentation = cmp.config.window.bordered(),
-			},
-			mapping = cmp.mapping.preset.insert({
-				["<C-p>"] = cmp.mapping.select_prev_item(cmp_select),
-				["<C-n>"] = cmp.mapping.select_next_item(cmp_select),
-				["<C-y>"] = cmp.mapping.confirm({ select = true }),
-				["<C-Space>"] = cmp.mapping.complete(),
-				["<Tab>"] = nil,
-				["<S-Tag>"] = nil,
-			}),
-		})
-
-		cmp.setup.cmdline("/", {
-			mapping = cmp.mapping.preset.cmdline(),
-			sources = {
-				{ name = "buffer" },
-			},
-		})
-
-		cmp.setup.cmdline(":", {
-			mapping = cmp.mapping.preset.cmdline(),
-			sources = cmp.config.sources({
-				{ name = "path" },
-			}, {
-				{
-					name = "cmdline",
-					option = {
-						ignore_cmds = { "Man", "!" },
-					},
-				},
-			}),
-		})
-
-		cmp.setup.filetype({ "sql", "mysql", "plsql" }, {
-			sources = {
-				{ name = "vim-dadbod-completions" },
-				{ name = "buffer" },
-			},
-		})
+		local lspconfig_defaults = lsp_config.util.default_config
+		lspconfig_defaults.capabilities =
+			vim.tbl_deep_extend("force", lspconfig_defaults.capabilities, require("blink.cmp").get_lsp_capabilities())
 
 		lsp.set_sign_icons({
 			error = "E",
