@@ -4,8 +4,12 @@ return {
 	priority = 1000,
 	opts = {
 		transparent = true,
+		styles = {
+			sidebars = "transparent",
+			floats = "transparent",
+		},
 		plugins = {
-			all = package.loaded.lazy == nil or package.loaded.lazy == false,
+			auto = true,
 			telescope = true,
 		},
 	},

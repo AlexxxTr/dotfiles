@@ -19,7 +19,14 @@ return {
 	dependencies = {
 		-- LSP Support
 		{ "neovim/nvim-lspconfig" },
-		{ "williamboman/mason.nvim" },
+		{
+			"williamboman/mason.nvim",
+			opts = {
+				ui = {
+					border = "rounded",
+				},
+			},
+		},
 		{ "williamboman/mason-lspconfig.nvim" },
 
 		-- Autocompletion and snippets
@@ -29,9 +36,22 @@ return {
 			version = "v0.*",
 			opts = {
 				keymap = { preset = "default" },
+				completion = {
+					menu = {
+						draw = {
+							treesitter = { "LSP" },
+						},
+					},
+					documentation = {
+						auto_show = true,
+						window = {
+							border = "rounded",
+						},
+					},
+				},
 
 				appearance = {
-					use_nvim_cmp_as_default = true,
+					use_nvim_cmp_as_default = false,
 					nerd_font_variant = "mono",
 				},
 				sources = {
@@ -85,7 +105,16 @@ return {
 			end, opts)
 		end)
 
+		-- Add the border on hover and on signature help popup window
+		local handlers = {
+			["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, { border = "rounded" }),
+			["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, { border = "rounded" }),
+		}
+
+		-- Add border to the diagnostic popup window
+
 		lsp_config.lua_ls.setup({
+            handlers = handlers,
 			settings = {
 				Lua = {
 					runtime = {
@@ -112,7 +141,6 @@ return {
 			},
 		})
 
-		require("mason").setup()
 		require("mason-lspconfig").setup({
 			automatic_installation = true,
 			ensure_installed = lsp_servers,
@@ -133,6 +161,7 @@ return {
 				end,
 				pyright = function()
 					lsp_config.pyright.setup({
+                        handlers = handlers,
 						settings = {
 							pyright = {
 								disableOrganizeImports = true,
@@ -174,6 +203,7 @@ return {
 
 		vim.diagnostic.config({
 			virtual_text = true,
+			float = { border = "rounded" },
 		})
 	end,
 }
