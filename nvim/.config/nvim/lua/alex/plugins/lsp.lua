@@ -113,6 +113,10 @@ return {
 
 		-- Add border to the diagnostic popup window
 
+        for _, server in ipairs(lsp_servers) do
+            lsp_config[server].setup({ handlers = handlers });
+        end
+
 		lsp_config.lua_ls.setup({
             handlers = handlers,
 			settings = {
