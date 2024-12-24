@@ -60,7 +60,9 @@ return {
 	dependencies = {
 		"nvim-lua/plenary.nvim",
 	},
-	opts = {},
+	opts = {
+        defaults = require("telescope.themes").get_ivy(),
+    },
 	keys = {
 		{
 			"<leader>pf",
@@ -72,6 +74,12 @@ return {
 			"<C-p>",
 			function()
 				require("telescope.builtin").git_files()
+			end,
+		},
+		{
+			"<leader>gb",
+			function()
+				require("telescope.builtin").git_branches()
 			end,
 		},
 		{
