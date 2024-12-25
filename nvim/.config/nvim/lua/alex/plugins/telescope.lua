@@ -59,10 +59,24 @@ return {
 	"nvim-telescope/telescope.nvim",
 	dependencies = {
 		"nvim-lua/plenary.nvim",
+		{
+			"nvim-telescope/telescope-fzf-native.nvim",
+			build = "make",
+			config = function()
+				require("telescope").load_extension("fzf")
+			end,
+		},
 	},
 	opts = {
-        defaults = require("telescope.themes").get_ivy(),
-    },
+		defaults = require("telescope.themes").get_ivy(),
+		extensions = {
+			fzf = {
+				fuzzy = true, -- false will only do exact matching
+				override_generic_sorter = true, -- override the generic sorter
+				override_file_sorter = true, -- override the file sorter
+			},
+		},
+	},
 	keys = {
 		{
 			"<leader>pf",
