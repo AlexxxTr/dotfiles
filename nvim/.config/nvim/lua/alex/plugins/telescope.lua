@@ -56,61 +56,66 @@ local live_mutligrep = function(opts)
 end
 
 return {
-	"nvim-telescope/telescope.nvim",
-	dependencies = {
-		"nvim-lua/plenary.nvim",
-		{
-			"nvim-telescope/telescope-fzf-native.nvim",
-			build = "make",
-			config = function()
-				require("telescope").load_extension("fzf")
-			end,
+	{
+		"nvim-telescope/telescope.nvim",
+		dependencies = {
+			"nvim-lua/plenary.nvim",
 		},
-	},
-	opts = {
-		defaults = require("telescope.themes").get_ivy(),
-		extensions = {
-			fzf = {
-				fuzzy = true, -- false will only do exact matching
-				override_generic_sorter = true, -- override the generic sorter
-				override_file_sorter = true, -- override the file sorter
+		opts = {
+			defaults = require("telescope.themes").get_ivy(),
+			extensions = {
+				fzf = {
+					fuzzy = true, -- false will only do exact matching
+					override_generic_sorter = true, -- override the generic sorter
+					override_file_sorter = true, -- override the file sorter
+				},
+			},
+		},
+		keys = {
+			{
+				"<leader>pf",
+				function()
+					require("telescope.builtin").find_files()
+				end,
+			},
+			{
+				"<C-p>",
+				function()
+					require("telescope.builtin").git_files()
+				end,
+			},
+			{
+				"<leader>gb",
+				function()
+					require("telescope.builtin").git_branches()
+				end,
+			},
+			{
+				"<leader>ps",
+				function()
+					require("telescope.builtin").grep_string({ search = vim.fn.input("Grep > ") })
+				end,
+			},
+			{
+				"<leader>vh",
+				function()
+					require("telescope.builtin").help_tags()
+				end,
+			},
+			{
+				"<leader>fg",
+				live_mutligrep,
 			},
 		},
 	},
-	keys = {
-		{
-			"<leader>pf",
-			function()
-				require("telescope.builtin").find_files()
-			end,
-		},
-		{
-			"<C-p>",
-			function()
-				require("telescope.builtin").git_files()
-			end,
-		},
-		{
-			"<leader>gb",
-			function()
-				require("telescope.builtin").git_branches()
-			end,
-		},
-		{
-			"<leader>ps",
-			function()
-				require("telescope.builtin").grep_string({ search = vim.fn.input("Grep > ") })
-			end,
-		},
-		{
-			"<leader>vh",
-			function()
-				require("telescope.builtin").help_tags()
-			end,
-		},
-		{
-			"<leader>fg",
-			live_mutligrep,
-		},
-	},
+	-- {
+	-- 	"nvim-telescope/telescope-fzf-native.nvim",
+	-- 	build = "make",
+	-- 	dependencies = {
+	-- 		"nvim-telescope/telescope.nvim",
+	-- 	},
+	-- 	config = function()
+	-- 		require("telescope").load_extension("fzf")
+	-- 	end,
+	-- },
 }
