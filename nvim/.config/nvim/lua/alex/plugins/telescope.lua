@@ -26,7 +26,7 @@ local live_mutligrep = function(opts)
 				table.insert(args, pieces[2])
 			end
 
-			return vim.tbl_flatten({
+			return vim.iter({
 				args,
 				{
 					"--color=never",
@@ -38,7 +38,7 @@ local live_mutligrep = function(opts)
 					"--hidden",
 					"--no-ignore-vcs",
 				},
-			})
+			}):flatten():totable()
 		end,
 		entry_maker = make_entry.gen_from_vimgrep(opts),
 		cwd = opts.cwd,
