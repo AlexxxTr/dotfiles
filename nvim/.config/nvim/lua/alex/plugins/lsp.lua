@@ -12,6 +12,8 @@ local lsp_servers = {
 	"pyright",
 	"ruff",
 	"ansiblels",
+    "docker_compose_language_service",
+    "bashls",
 }
 
 return {
@@ -37,6 +39,11 @@ return {
 			opts = {
 				keymap = { preset = "default" },
 				completion = {
+                    accept = {
+                        auto_brackets = {
+                            enabled = false,
+                        },
+                    },
 					menu = {
 						draw = {
 							treesitter = { "LSP" },
@@ -187,6 +194,11 @@ return {
 						end,
 					})
 				end,
+                angularls = function()
+                    lsp_config.angularls.setup({
+                        handlers = handlers,
+                    })
+                end,
 			},
 		})
 

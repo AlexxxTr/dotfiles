@@ -1,0 +1,29 @@
+[maintenance]
+        repo = /home/aletru/projects/tig/tig-dpqa-cloud
+[user]
+        email = alexander.truyaert@barco.com
+        name = Alexander Truyaert
+[credential "https://github.com"]
+        helper =
+        helper = !/home/linuxbrew/.linuxbrew/bin/gh auth git-credential
+[credential "https://gist.github.com"]
+        helper =
+        helper = !/home/linuxbrew/.linuxbrew/bin/gh auth git-credential
+[pull]
+        rebase = true
+
+[core]
+    compression = 9
+    whitespace = error
+    preloadindex = true
+
+[advice]
+    addEmptyPathspec = false
+    pushNonFastForward = false
+    statusHints = false
+
+[url "git@github.com/barcoemu/"]
+    insteadOf = "barco:"
+
+[url "git@github.com/"]
+    insteadOf = "gh:"

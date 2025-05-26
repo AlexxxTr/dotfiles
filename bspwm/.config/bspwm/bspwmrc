@@ -1,0 +1,10 @@
+#! /bin/sh
+
+polybar &
+
+pgrep -x sxhkd > /dev/null || sxhkd &
+
+bspc config remove_disabled_monitors    true
+bspc config remove_unplugged_monitors   true
+
+bspc config border_width 2

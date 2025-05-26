@@ -12,11 +12,13 @@ return {
 			css = { "prettierd", "prettier", stop_after_first = true },
 			html = { "prettierd", "prettier", stop_after_first = true },
 			json = { "prettierd", "prettier", stop_after_first = true },
+			bash = { "shfmt" },
+			markdown = { "markdownlint-cli2" },
 		},
 	},
 	keys = {
 		{
-			"<leader>ff",
+			"<leader>fn",
 			function()
 				require("conform").format({ async = true })
 			end,

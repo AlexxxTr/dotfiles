@@ -16,5 +16,3 @@ require("lazy").setup("alex.plugins", {
 		border = "rounded",
 	},
 })
-
-vim.cmd("colorscheme tokyonight")

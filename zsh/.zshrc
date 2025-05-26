@@ -121,3 +121,5 @@ fi
 # manual neovim install
 export PATH=$PATH:/opt/nvim-linux64/bin
 export PATH=$PATH:$HOME/.local/bin
+
+. "$HOME/.local/share/../bin/env"

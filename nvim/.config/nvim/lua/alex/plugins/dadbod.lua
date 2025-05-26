@@ -11,6 +11,6 @@ return {
 		"DBUIFindBuffer",
 	},
     keys = {
-        { "<leader>db", "<cmd>DBUIToggle<cr>" }
+        { "<leader>vdb", "<cmd>DBUIToggle<cr>" }
     }
 }
