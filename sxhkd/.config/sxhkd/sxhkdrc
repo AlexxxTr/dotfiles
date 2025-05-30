@@ -8,7 +8,7 @@ alt + Return
 
 # program launcher
 alt + @space
-	rofi -show drun
+	dmenu_run
 
 # make sxhkd reload its configuration files:
 alt + Escape
@@ -139,5 +139,8 @@ XF86AudioNext
 XF86AudioPrev
     playerctl previous
 
-alt + b
-    microsoft-edge
+alt + x
+    wallpapermenu
+
+alt + dot
+    qutebrowser
