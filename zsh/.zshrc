@@ -22,18 +22,13 @@ zinit ice as"command" from"gh-r" \
 zinit light starship/starship
 
 # Add in zsh plugins
-zinit light zsh-users/zsh-syntax-highlighting
-zinit light zsh-users/zsh-completions
-zinit light zsh-users/zsh-autosuggestions
 zinit light Aloxaf/fzf-tab
-zinit light ntnyq/omz-plugin-pnpm
 
 # Add in snippets
 zinit snippet OMZP::aliases
 zinit snippet OMZP::aws
 zinit snippet OMZP::command-not-found
 zinit snippet OMZP::docker-compose
-zinit snippet OMZP::eza
 zinit snippet OMZP::node
 zinit snippet OMZP::git
 zinit snippet OMZP::ubuntu
@@ -70,7 +65,6 @@ zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls --color $realpath'
 zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
 
 # Aliases
-alias ls='ls --color'
 alias vim='nvim'
 alias v='nvim'
 alias c='clear'
@@ -121,5 +115,3 @@ fi
 # manual neovim install
 export PATH=$PATH:/opt/nvim-linux64/bin
 export PATH=$PATH:$HOME/.local/bin
-
-. "$HOME/.local/share/../bin/env"

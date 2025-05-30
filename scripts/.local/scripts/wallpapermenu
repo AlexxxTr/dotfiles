@@ -1,0 +1,20 @@
+#!/bin/bash
+
+FOLDER=~/backgrounds
+SCRIPT=pywal16
+
+menu () {
+    CHOICE=$(nsxiv -otb $FOLDER/*)
+
+    case $CHOICE in 
+        *.*) wal -i $CHOICE -o $SCRIPT ;;
+        *) exit 0 ;;
+    esac
+}
+
+case "$#" in
+    0) menu ;;
+    1) wall -i "$1" -o $SCRIPT --theme gruvbox ;;
+    2) wall -i "$1" --theme "$2" -o $SCRIPT ;;
+    *) exit 0 ;;
+esac

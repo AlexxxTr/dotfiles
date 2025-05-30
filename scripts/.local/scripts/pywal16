@@ -1,0 +1,5 @@
+#!/bin/bash
+
+pgrep qutebrowser > /dev/null && qutebrowser ':config-source'
+pkill dunst; setsid -f dunst
+

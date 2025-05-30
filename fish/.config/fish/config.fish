@@ -15,13 +15,16 @@ set fish_greeting
 # Setup aws-cli tab-completion
 complete --command aws --no-files --arguments '(begin; set --local --export COMP_SHELL fish; set --local --export COMP_LINE (commandline); aws_completer | sed \'s/ $//\'; end)'
 
-eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-
 fish_add_path $HOME/bin
 fish_add_path $HOME/.local/bin
 fish_add_path $HOME/.local/scripts
 
 set EDITOR nvim
+
+alias v nvim
+alias ls "eza -hal --color always"
+alias cd z
+alias cat bat
 
 fzf --fish | source
 zoxide init fish | source
