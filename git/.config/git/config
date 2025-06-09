@@ -22,8 +22,8 @@
     pushNonFastForward = false
     statusHints = false
 
-[url "git@github.com/barcoemu/"]
+[url "https://github.com/barcoemu/"]
     insteadOf = "barco:"
 
-[url "git@github.com/"]
+[url "https://github.com/"]
     insteadOf = "gh:"

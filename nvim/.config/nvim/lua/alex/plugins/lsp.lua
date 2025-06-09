@@ -14,6 +14,7 @@ local lsp_servers = {
 	"ansiblels",
     "docker_compose_language_service",
     "bashls",
+    "tinymist",
 }
 
 return {
@@ -35,7 +36,7 @@ return {
 		{
 			"saghen/blink.cmp",
 			dependencies = "rafamadriz/friendly-snippets",
-			version = "v0.*",
+			version = "1.*",
 			opts = {
 				keymap = { preset = "default" },
 				completion = {
@@ -154,6 +155,7 @@ return {
 
 		require("mason-lspconfig").setup({
 			automatic_installation = true,
+            automatic_enable = true,
 			ensure_installed = lsp_servers,
 			handles = {
 				lsp.default_setup,
@@ -197,6 +199,16 @@ return {
                 angularls = function()
                     lsp_config.angularls.setup({
                         handlers = handlers,
+                    })
+                end,
+                tinymist = function()
+                    lsp_config.tinymist.setup({
+                        handlers = handlers,
+                        settings = {
+                            formatterMode = "typstyle",
+                            exportPdf = "onType",
+                            semanticTokens = "disable"
+                        }
                     })
                 end,
 			},
