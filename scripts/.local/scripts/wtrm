@@ -1,0 +1,66 @@
+#!/bin/bash
+
+if [[ $# -lt 1 ]]; then
+  echo "Please provide at least one argument"
+  exit 1
+fi
+
+WORKTREE_ROOT_DIR=$(realpath $(git rev-parse --git-common-dir))
+
+if [[ -z "${WORKTREE_ROOT_DIR}" ]]; then 
+  echo 'WORKTREE_ROOT_DIR is not set'
+  exit 1
+fi
+
+worktrees=$(git -C "$WORKTREE_ROOT_DIR" worktree list --porcelain)
+oldpwd=$(pwd)
+
+echo $worktrees
+
+absPaths=""
+
+for p in "$@"; do
+  absPath=$(realpath "$p")
+  absPaths+=("$absPath")
+done
+
+# Jump to safe directory, decide at the end what to do
+cd "${WORKTREE_ROOT_DIR}/branches"
+
+for p in "$absPaths[@]"; do
+    echo "Processing $p"
+  if [[ ! -d "$p" ]]; then
+    echo "$p is not a directory, skipping..."
+    continue
+  fi
+
+  info=$(echo "$worktrees" | awk -v pat="$p\n" 'BEGIN{RS=""; ORS="\n\n"} index($0, pat)')
+  cnt=$(echo "$info" | wc -l)
+
+  if [ ! "$cnt" -eq 3 ]; then
+    echo "$p is not a worktree, skipping..."
+    continue
+  fi
+
+  branch=$(echo "$info" | grep '^branch' | cut -d ' ' -f2- | cut -d '/' -f3)
+
+  echo "Removing worktree $p"
+  git -C "$WORKTREE_ROOT_DIR" worktree remove "$p"
+
+  if [[ $? -eq 0 ]]; then
+    git -C "$WORKTREE_ROOT_DIR" branch -D "$branch"
+  else
+    echo "Removal of worktree failed, leaving branch $branch as-is"
+  fi
+
+  if [[ -z "$gotoDir" ]]; then
+    cd "$gotoDir"
+  fi
+done
+
+# If we remove a worktree in which the PWD is located, we should change directory before exiting the script.
+if [[ -d "$oldpwd" ]]; then
+  cd "$oldpwd"
+fi
+
+ 

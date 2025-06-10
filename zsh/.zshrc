@@ -115,3 +115,6 @@ fi
 # manual neovim install
 export PATH=$PATH:/opt/nvim-linux64/bin
 export PATH=$PATH:$HOME/.local/bin
+
+# work stuff
+export PATH=/opt/Windchill/RVSCient13_3/bin:$PATH
