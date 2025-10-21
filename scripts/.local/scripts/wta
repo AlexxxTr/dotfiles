@@ -11,15 +11,26 @@ skipPost=""
 remoteBranch=""
 commitish=""
 name=""
+trackedBranch=""
 
 
-while getopts ':s:r::d:b:' opt;
+while getopts ':s:r::d:b::ht:' opt;
 do
   case $opt in 
-    s|skip-post) skipPost="true" ;;
-    r|remote) remoteBranch="$OPTARG" ;;
+    s) skipPost="true" ;;
+    r) remoteBranch="$OPTARG" ;;
     d) commitish="develop" ;;
     b) name="$OPTARG" ;;
+    t) trackedBranch="$OPTARG" ;;
+    h) echo "Usage: wta -b <branch-name> [-r <remote-branch>] [-s] [-d]"
+      echo "  -b <branch-name>   Name of the new branch to create"
+      echo "  -r <remote-branch> Optional remote branch to track"
+      echo "  -s                 Skip post-worktree-add script"
+      echo "  -d                 Use 'develop' as the commitish for the new branch"
+      echo "  -t <tracked-branch>  Optional branch to track (default: develop)"
+      echo "  -h                 Display this help message"
+      exit 0
+      ;;
     \?) 
       echo "Invalid option: -$OPTARG"
       exit 2
@@ -36,13 +47,13 @@ shift $((OPTIND - 1))
 
 if [[ -z "$name" ]]; then
   echo "Please provide a name for the directory in which to create the new worktree"
-  echo "Usage: $0 -b <branch-name> [-r <remote-branch>] [-s] [-d]"
+  echo "Usage: wta -b <branch-name> [-r <remote-branch>] [-s] [-d]"
   exit 2
 fi
 
 if [[ -z "$remoteBranch" ]]; then
   echo "Setting up new branch $name"
-  git worktree add -b "${name}" "${WORKTREE_ROOT_DIR}/branches/${name}"
+  git worktree add -b "${name}" "${WORKTREE_ROOT_DIR}/branches/${name}"  "${trackedBranch:-develop}"
 else
   echo "Setting up remote branch"
   git worktree add "${WORKTREE_ROOT_DIR}/branches/${name}" "$remoteBranch"

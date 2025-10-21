@@ -1,38 +1,7 @@
 return {
-    "xiyaowong/transparent.nvim"
+    "vague2k/vague.nvim",
+    lazy = false,
+    config = function()
+        vim.cmd("colorscheme vague")
+    end,
 }
--- return {
--- 	"oncomouse/lushwal.nvim",
--- 	cmd = { "LushwalCompile" },
--- 	dependencies = {
--- 		{ "rktjmp/lush.nvim" },
--- 		{ "rktjmp/shipwright.nvim" },
--- 	},
--- 	lazy = false,
---     config = function ()
---         vim.cmd("colorscheme lushwal")
---     end
--- }
--- return {
--- 	"folke/tokyonight.nvim",
--- 	lazy = false,
--- 	priority = 1000,
--- 	opts = {
--- 		transparent = true,
--- 		styles = {
--- 			sidebars = "transparent",
--- 			floats = "transparent",
--- 		},
--- 		plugins = {
--- 			auto = true,
--- 		},
--- 	},
--- }
--- lua/plugins/rose-pine.lua
--- return {
--- 	"rose-pine/neovim",
--- 	name = "rose-pine",
--- 	config = function()
--- 		vim.cmd("colorscheme rose-pine")
--- 	end
--- }

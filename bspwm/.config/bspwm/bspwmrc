@@ -4,7 +4,7 @@ pgrep -x /usr/bin/dunst >> /dev/null || /usr/bin/dunst &
 pgrep -x picom || picom -b
 
 # source the colors.
-. "${HOME}/.cache/wal/colors.sh"
+# . "${HOME}/.cache/wal/colors.sh"
 
 # Set the border colors.
 bspc config normal_border_color "$color1"

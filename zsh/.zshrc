@@ -1,6 +1,3 @@
-# Add deno completions to search path
-if [[ ":$FPATH:" != *":$HOME/.zsh/completions:"* ]]; then export FPATH="$HOME/.zsh/completions:$FPATH"; fi
-
 if [ -d "/home/linuxbrew/.linuxbrew/bin" ]; then
 	eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 fi
@@ -16,31 +13,20 @@ fi
 # Source/Load zinit
 source "${ZINIT_HOME}/zinit.zsh"
 
-zinit ice as"command" from"gh-r" \
-          atclone"./starship init zsh > init.zsh; ./starship completions zsh > _starship" \
-          atpull"%atclone" src"init.zsh"
-zinit light starship/starship
+zinit snippet OMZT::robbyrussell
 
-# Add in zsh plugins
-zinit light Aloxaf/fzf-tab
+setopt promptsubst
 
-# Add in snippets
-zinit snippet OMZP::aliases
-zinit snippet OMZP::aws
-zinit snippet OMZP::command-not-found
-zinit snippet OMZP::docker-compose
-zinit snippet OMZP::node
-zinit snippet OMZP::git
-zinit snippet OMZP::ubuntu
+zinit wait lucid for \
+        OMZL::git.zsh \
+  atload"unalias grv" \
+        OMZP::git
 
 zinit as"program" make'!' atclone'./direnv hook zsh > zhook.zsh' \
     atpull'%atclone' pick"direnv" src"zhook.zsh" for \
         direnv/direnv
 
-# Load completions
-autoload -Uz compinit && compinit
-
-zinit cdreplay -q
+zstyle ':omz:alpha:lib:git' async-prompt no
 
 # History
 HISTSIZE=5000
@@ -57,13 +43,6 @@ setopt hist_find_no_dups
 
 bindkey '^R' history-incremental-search-backward
 
-# Completion styling
-zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
-zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
-zstyle ':completion:*' menu no
-zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls --color $realpath'
-zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
-
 # Aliases
 alias vim='nvim'
 alias v='nvim'
@@ -74,8 +53,6 @@ alias pnpm="corepack pnpm"
 alias pnpx="corepack pnpx"
 alias npm="corepack npm"
 alias npx="corepack npx"
-
-alias ls="eza"
 
 # Python
 export PYENV_ROOT="$HOME/.pyenv"
@@ -89,17 +66,15 @@ case ":$PATH:" in
   *) export PATH="$PNPM_HOME:$PATH" ;;
 esac
 # pnpm end
-#
+
 # Enable fzf keybindings
+eval "$(fzf --zsh)"
 
 if [ -d "$HOME/.deno/env" ]; then
     . "$HOME/.deno/env"
 fi
 
 eval "$(fnm env --use-on-cd --shell zsh)"
-
-eval "$(zoxide init zsh)"
-eval "$(fzf --zsh)"
 
 # Tmux sessionizer script 
 PATH="$PATH":"$HOME/.local/scripts/"
@@ -117,4 +92,4 @@ export PATH=$PATH:/opt/nvim-linux64/bin
 export PATH=$PATH:$HOME/.local/bin
 
 # work stuff
-export PATH=/opt/Windchill/RVSCient13_3/bin:$PATH
+export PATH=/opt/Windchill/RVSClient13_3/bin:$PATH

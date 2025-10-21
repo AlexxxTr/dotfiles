@@ -121,26 +121,14 @@ alt + {Left,Down,Up,Right}
 	bspc node -v {-20 0,0 20,0 -20,20 0}
 
 # My custom stuff
-XF86AudioRaiseVolume
-    amixer set Master 3%+
+XF86Audio{Raise,Lower,Mute}Volume
+    amixer set Master {3%+,3%-,toggle}
 
-XF86AudioLowerVolume
-    amixer set Master 3%-
-
-XF86AudioMute 
-    amixer set Master toggle
-
-XF86AudioPlay
-    playerctl play-pause
-XF86AudioPause
-    playerctl play-pause
-XF86AudioNext
-    playerctl next
-XF86AudioPrev
-    playerctl previous
+XF86Audio{Play,Pause,Next,Prev}
+    playerctl {play-pause,play-pause,next,previous}
 
 alt + x
     wallpapermenu
 
-alt + dot
-    qutebrowser
+alt + o ; {b}
+    {microsoft-edge}

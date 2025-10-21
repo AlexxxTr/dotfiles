@@ -16,6 +16,7 @@
     compression = 9
     whitespace = error
     preloadindex = true
+	pager = delta
 
 [advice]
     addEmptyPathspec = false
@@ -27,3 +28,11 @@
 
 [url "https://github.com/"]
     insteadOf = "gh:"
+[interactive]
+	diffFilter = delta --color-only
+[delta]
+	navigate = true
+	line-numbers = true
+	side-by-side = true
+[merge]
+	conflictStyle = zdiff3

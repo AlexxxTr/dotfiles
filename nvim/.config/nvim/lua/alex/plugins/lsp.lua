@@ -12,39 +12,85 @@ local lsp_servers = {
 	"pyright",
 	"ruff",
 	"ansiblels",
-    "docker_compose_language_service",
-    "bashls",
-    "tinymist",
+	"docker_compose_language_service",
+	"bashls",
+	"tinymist",
+	"jsonls",
+	"yamlls",
 }
 
-return {
-	"VonHeikemen/lsp-zero.nvim",
-	dependencies = {
-		-- LSP Support
-		{ "neovim/nvim-lspconfig" },
-		{
-			"williamboman/mason.nvim",
-			opts = {
-				ui = {
-					border = "rounded",
+local function retrieve_server_setup()
+	local basic_server_setup = {}
+
+	for _, server in ipairs(lsp_servers) do
+		basic_server_setup[server] = {}
+	end
+
+	basic_server_setup["lua_ls"] = {
+		settings = {
+			Lua = {
+				runtime = {
+					version = "LuaJIT",
+				},
+				diagnostics = {
+					globals = { "vim" },
+				},
+				workspace = {
+					library = {
+						vim.env.VIMRUNTIME,
+					},
 				},
 			},
 		},
-		{ "williamboman/mason-lspconfig.nvim" },
+	}
 
-		-- Autocompletion and snippets
+	basic_server_setup["yamlls"] = {
+		settings = {
+			yaml = {
+				validate = true,
+				format = { enable = true },
+				hover = true,
+				completion = true,
+				schemaStore = {
+					enabled = true,
+					url = "https://www.schemastore.org/api/json/catalog.json",
+				},
+			},
+		},
+	}
+
+	-- basic_server_setup["jsonls"] = {
+	--     settings = {
+	--         json = {
+	--             validate = { enable = true },
+	--             schemas = require("schemastore").json.schemas(),
+	--             format = { enable = true },
+	--         },
+	--     },
+	-- }
+
+	return basic_server_setup
+end
+
+return {
+	"neovim/nvim-lspconfig",
+	dependencies = {
+		-- { "b0o/schemastore.nvim" }, -- Disabled until I find a way to fix this again
 		{
 			"saghen/blink.cmp",
-			dependencies = "rafamadriz/friendly-snippets",
+			dependencies = {
+				"rafamadriz/friendly-snippets",
+				"giuxtaposition/blink-cmp-copilot",
+			},
 			version = "1.*",
 			opts = {
 				keymap = { preset = "default" },
 				completion = {
-                    accept = {
-                        auto_brackets = {
-                            enabled = false,
-                        },
-                    },
+					accept = {
+						auto_brackets = {
+							enabled = false,
+						},
+					},
 					menu = {
 						draw = {
 							treesitter = { "LSP" },
@@ -57,177 +103,98 @@ return {
 						},
 					},
 				},
-
 				appearance = {
 					use_nvim_cmp_as_default = false,
 					nerd_font_variant = "mono",
 				},
 				sources = {
-					default = { "lsp", "path", "snippets", "buffer" },
+					default = { "lsp", "path", "snippets", "buffer", "copilot" },
+					providers = {
+						copilot = {
+							name = "copilot",
+							module = "blink-cmp-copilot",
+							-- kind = "Copilot",
+							score_offset = 100,
+							async = true,
+						},
+					},
 				},
 
 				signature = { enabled = true },
 			},
 			opts_extend = { "sources.default" },
 		},
-	},
-	config = function()
-		local lsp = require("lsp-zero")
-		local lsp_config = require("lspconfig")
-		lsp.extend_lspconfig()
-
-		lsp.on_attach(function(_, bufnr)
-			lsp.default_keymaps({ buffer = bufnr })
-
-			local opts = { buffer = bufnr, remap = false }
-
-			vim.keymap.set("n", "gd", function()
-				vim.lsp.buf.definition()
-			end, opts)
-			vim.keymap.set("n", "K", function()
-				vim.lsp.buf.hover()
-			end, opts)
-			vim.keymap.set("n", "<leader>vws", function()
-				vim.lsp.buf.workspace_symbol()
-			end, opts)
-			vim.keymap.set("n", "<leader>vd", function()
-				vim.diagnostic.open_float()
-			end, opts)
-			vim.keymap.set("n", "[d", function()
-				vim.diagnostic.goto_next()
-			end, opts)
-			vim.keymap.set("n", "]d", function()
-				vim.diagnostic.goto_prev()
-			end, opts)
-			vim.keymap.set("n", "<leader>vca", function()
-				vim.lsp.buf.code_action()
-			end, opts)
-			vim.keymap.set("n", "<leader>vrr", function()
-				vim.lsp.buf.references()
-			end, opts)
-			vim.keymap.set("n", "<leader>vrn", function()
-				vim.lsp.buf.rename()
-			end, opts)
-			vim.keymap.set("i", "<C-h>", function()
-				vim.lsp.buf.signature_help()
-			end, opts)
-		end)
-
-		-- Add the border on hover and on signature help popup window
-		local handlers = {
-			["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, { border = "rounded" }),
-			["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, { border = "rounded" }),
-		}
-
-		-- Add border to the diagnostic popup window
-
-        for _, server in ipairs(lsp_servers) do
-            lsp_config[server].setup({ handlers = handlers });
-        end
-
-		lsp_config.lua_ls.setup({
-            handlers = handlers,
-			settings = {
-				Lua = {
-					runtime = {
-						-- Tell the language server which version of Lua you're using
-						-- (most likely LuaJIT in the case of Neovim)
-						version = "LuaJIT",
-					},
-					diagnostics = {
-						-- Get the language server to recognize the `vim` global
-						globals = {
-							"vim",
-							"require",
-						},
-					},
-					workspace = {
-						-- Make the server aware of Neovim runtime files
-						library = vim.api.nvim_get_runtime_file("", true),
-					},
-					-- Do not send telemetry data containing a randomized but unique identifier
-					telemetry = {
-						enable = false,
-					},
+		{
+			"williamboman/mason.nvim",
+			opts = {
+				ui = {
+					border = "rounded",
 				},
 			},
-		})
-
-		require("mason-lspconfig").setup({
-			automatic_installation = true,
-            automatic_enable = true,
-			ensure_installed = lsp_servers,
-			handles = {
-				lsp.default_setup,
-				ts_ls = function()
-					lsp_config.ts_ls.setup({
-						settings = {
-							completions = {
-								completeFunctionCalls = true,
-							},
-						},
-					})
-				end,
-				lua_ls = function()
-					local lua_opts = lsp.nvim_lua_ls()
-					lsp_config.lua_ls.setup(lua_opts)
-				end,
-				pyright = function()
-					lsp_config.pyright.setup({
-                        handlers = handlers,
-						settings = {
-							pyright = {
-								disableOrganizeImports = true,
-							},
-							python = {
-								analysis = {
-									ignore = { "*" },
-								},
-							},
-						},
-					})
-				end,
-				ruff = function()
-					lsp_config.ruff.setup({
-						on_attach = function(client, _)
-							if client.name == "ruff" then
-								client.server_capabilities.hoverProvider = false
-							end
-						end,
-					})
-				end,
-                angularls = function()
-                    lsp_config.angularls.setup({
-                        handlers = handlers,
-                    })
-                end,
-                tinymist = function()
-                    lsp_config.tinymist.setup({
-                        handlers = handlers,
-                        settings = {
-                            formatterMode = "typstyle",
-                            exportPdf = "onType",
-                            semanticTokens = "disable"
-                        }
-                    })
-                end,
+			keys = { { "<leader>cm", "<cmd>Mason<cr>", desc = "Mason" } },
+			build = ":MasonUpdate",
+		},
+		{
+			"williamboman/mason-lspconfig.nvim",
+			opts = {
+				automatic_enable = false,
+				ensure_installed = lsp_servers,
 			},
+		},
+	},
+	opts = {
+		servers = retrieve_server_setup(),
+	},
+	config = function(_, opts)
+		local lspconfig = vim.lsp.config;
+
+		for server, config in pairs(opts.servers) do
+			-- passing config.capabilities to blink.cmp merges with the capabilities in your
+			-- `opts[server].capabilities, if you've defined it
+			config.capabilities = require("blink.cmp").get_lsp_capabilities(config.capabilities)
+            vim.lsp.config(server, config)
+            vim.lsp.enable(server)
+		end
+
+		vim.api.nvim_create_autocmd("LspAttach", {
+			group = vim.api.nvim_create_augroup("UserLspConfig", {}),
+			callback = function(ev)
+				vim.bo[ev.buf].omnifunc = "v:lua.vim.lsp.omnifunc"
+
+				local opts = { buffer = ev.buf }
+
+				vim.keymap.set("n", "gd", function()
+					vim.lsp.buf.definition()
+				end, opts)
+				vim.keymap.set("n", "K", function()
+					vim.lsp.buf.hover()
+				end, opts)
+				vim.keymap.set("n", "<leader>vws", function()
+					vim.lsp.buf.workspace_symbol()
+				end, opts)
+				vim.keymap.set("n", "<leader>vd", function()
+					vim.diagnostic.open_float()
+				end, opts)
+				vim.keymap.set("n", "[d", function()
+					vim.diagnostic.jump({ count = 1, float = false })
+				end, opts)
+				vim.keymap.set("n", "]d", function()
+					vim.diagnostic.jump({ count = -1, float = false })
+				end, opts)
+				vim.keymap.set("n", "<leader>vca", function()
+					vim.lsp.buf.code_action()
+				end, opts)
+				vim.keymap.set("n", "<leader>vrr", function()
+					vim.lsp.buf.references()
+				end, opts)
+				vim.keymap.set("n", "<leader>vrn", function()
+					vim.lsp.buf.rename()
+				end, opts)
+				vim.keymap.set("i", "<C-h>", function()
+					vim.lsp.buf.signature_help()
+				end, opts)
+			end,
 		})
-
-		lsp.setup_servers(lsp_servers)
-
-		local lspconfig_defaults = lsp_config.util.default_config
-		lspconfig_defaults.capabilities =
-			vim.tbl_deep_extend("force", lspconfig_defaults.capabilities, require("blink.cmp").get_lsp_capabilities())
-
-		lsp.set_sign_icons({
-			error = "E",
-			warn = "W",
-			hint = "H",
-			info = "I",
-		})
-
-		lsp.setup()
 
 		vim.diagnostic.config({
 			virtual_text = true,

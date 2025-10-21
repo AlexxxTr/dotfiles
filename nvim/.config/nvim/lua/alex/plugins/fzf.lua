@@ -2,10 +2,11 @@ return {
 	"ibhagwan/fzf-lua",
 	-- optional for icon support
 	dependencies = { "nvim-tree/nvim-web-devicons" },
-    command = "FzfLua",
+	command = "FzfLua",
 	opts = {
 		files = {
 			previewer = "bat",
+            cwd_prompt = false,
 		},
 		keymap = {
 			fzf = {
@@ -14,6 +15,36 @@ return {
 				["ctrl-q"] = "select-all+accept",
 			},
 		},
+		ui_select = function(fzf_opts, items)
+			return vim.tbl_deep_extend("force", fzf_opts, {
+				prompt = " ",
+				winopts = {
+					title = " " .. vim.trim((fzf_opts.prompt or "Select"):gsub("%s*:%s*$", "")) .. " ",
+					title_pos = "center",
+				},
+			}, fzf_opts.kind == "codeaction" and {
+				winopts = {
+					layout = "vertical",
+					-- height is number of items minus 15 lines for the preview, with a max of 80% screen height
+					height = math.floor(math.min(vim.o.lines * 0.8 - 16, #items + 4) + 0.5) + 16,
+					width = 0.5,
+					preview = not vim.tbl_isempty(vim.lsp.get_clients({ bufnr = 0, name = "vtsls" })) and {
+						layout = "vertical",
+						vertical = "down:15,border-top",
+						hidden = "hidden",
+					} or {
+						layout = "vertical",
+						vertical = "down:15,border-top",
+					},
+				},
+			} or {
+				winopts = {
+					width = 0.5,
+					-- height is number of items, with a max of 80% screen height
+					height = math.floor(math.min(vim.o.lines * 0.8, #items + 4) + 0.5),
+				},
+			})
+		end,
 	},
 	keys = {
 		{ "<c-j>", "<c-j>", ft = "fzf", mode = "t", nowait = true },
@@ -30,6 +61,8 @@ return {
 		{ "<leader>fg", "<cmd>FzfLua git_files<cr>", desc = "Find Files (git-files)" },
 		{ "<leader>fr", "<cmd>FzfLua oldfiles<cr>", desc = "Recent" },
 		{ "<leader>fs", "<cmd>FzfLua lsp_document_symbols<cr>", desc = "File symbols" },
+		{ "<leader>gc", "<cmd>FzfLua git_commits<cr>", desc = "Git Commits" },
+		{ "<leader>gcf", "<cmd>FzfLua git_bcommits<cr>", desc = "Git Commits" },
 		-- search
 		{ '<leader>s"', "<cmd>FzfLua registers<cr>", desc = "Registers" },
 		{ "<leader>sg", "<cmd>FzfLua live_grep<cr>", desc = "Live Grep" },

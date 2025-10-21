@@ -1,0 +1,7 @@
+#!/bin/bash
+
+worktree_path=$(git worktree list | grep -v '(bare)' | fzf --height 40% --reverse --prompt="Select Worktree > " | awk '{print $1}')
+
+if [[ -n "$worktree_path" ]]; then
+  cd "$worktree_path" && git status -b
+fi

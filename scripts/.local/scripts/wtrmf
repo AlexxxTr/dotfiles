@@ -45,7 +45,7 @@ for p in $absPaths; do
   branch=$(echo "$info" | grep '^branch' | cut -d ' ' -f2- | cut -d '/' -f3-)
 
   echo "Removing worktree $p"
-  git -C "$WORKTREE_ROOT_DIR" worktree remove "$p"
+  git -C "$WORKTREE_ROOT_DIR" worktree remove "$p" --force
 
   if [[ $? -eq 0 ]]; then
     git -C "$WORKTREE_ROOT_DIR" branch -D "$branch"
