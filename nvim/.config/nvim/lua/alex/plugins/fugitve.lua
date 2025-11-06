@@ -1,12 +1,16 @@
 return {
 	"tpope/vim-fugitive",
 	command = { "G", "Git" },
+    keys = {
+        { "<leader>gs", vim.cmd.Git, desc = "Git Status" },
+        { "<leader>gu", "<cmd>diffget //2<CR>", desc = "Git Diff Get Left" },
+        { "<leader>gh", "<cmd>diffget //3<CR>", desc = "Git Diff Get Right" },
+    },
 	config = function()
-		vim.keymap.set("n", "<leader>gs", vim.cmd.Git)
-
 		local fugitive_augroup = vim.api.nvim_create_augroup("fugitive_augroup", {})
 
 		local autocmd = vim.api.nvim_create_autocmd
+
 		autocmd("BufWinEnter", {
 			group = fugitive_augroup,
 			pattern = "*",
@@ -31,8 +35,5 @@ return {
 				vim.keymap.set("n", "<leader>t", ":Git push -u origin ", opts)
 			end,
 		})
-
-		vim.keymap.set("n", "gu", "<cmd>diffget //2<CR>")
-		vim.keymap.set("n", "gh", "<cmd>diffget //3<CR>")
 	end,
 }
