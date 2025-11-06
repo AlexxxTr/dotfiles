@@ -109,6 +109,9 @@ return {
 				},
 				sources = {
 					default = { "lsp", "path", "snippets", "buffer", "copilot" },
+					per_filetype = {
+						sql = { "lsp", "dadbod", "snippets", "buffer", "copilot" },
+					},
 					providers = {
 						copilot = {
 							name = "copilot",
@@ -116,6 +119,10 @@ return {
 							-- kind = "Copilot",
 							score_offset = 100,
 							async = true,
+						},
+						dadbod = {
+							name = "Dadbod",
+							module = "vim_dadbod_completion.blink",
 						},
 					},
 				},
@@ -146,14 +153,14 @@ return {
 		servers = retrieve_server_setup(),
 	},
 	config = function(_, opts)
-		local lspconfig = vim.lsp.config;
+		local lspconfig = vim.lsp.config
 
 		for server, config in pairs(opts.servers) do
 			-- passing config.capabilities to blink.cmp merges with the capabilities in your
 			-- `opts[server].capabilities, if you've defined it
 			config.capabilities = require("blink.cmp").get_lsp_capabilities(config.capabilities)
-            vim.lsp.config(server, config)
-            vim.lsp.enable(server)
+			vim.lsp.config(server, config)
+			vim.lsp.enable(server)
 		end
 
 		vim.api.nvim_create_autocmd("LspAttach", {

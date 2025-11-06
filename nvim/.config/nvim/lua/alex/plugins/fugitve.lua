@@ -9,9 +9,7 @@ return {
 	config = function()
 		local fugitive_augroup = vim.api.nvim_create_augroup("fugitive_augroup", {})
 
-		local autocmd = vim.api.nvim_create_autocmd
-
-		autocmd("BufWinEnter", {
+		vim.api.nvim_create_autocmd("BufWinEnter", {
 			group = fugitive_augroup,
 			pattern = "*",
 			callback = function()
