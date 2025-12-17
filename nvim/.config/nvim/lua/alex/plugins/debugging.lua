@@ -25,6 +25,7 @@ return {
 				"rcarriga/nvim-dap-ui",
 				opts = {},
 			},
+            'nvim-neotest/nvim-nio',
 		},
 		config = function() end,
         keys = {

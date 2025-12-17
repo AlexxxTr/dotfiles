@@ -13,6 +13,7 @@ local lsp_servers = {
 	"ruff",
 	"ansiblels",
 	"docker_compose_language_service",
+    "dockerls",
 	"bashls",
 	"tinymist",
 	"jsonls",

@@ -15,6 +15,7 @@ return {
 			bash = { "shfmt" },
 			markdown = { "markdownlint-cli2" },
             typst = { "prettypst" },
+            python = { "ruff", "black", stop_after_first = true },
 		},
 	},
 	keys = {
