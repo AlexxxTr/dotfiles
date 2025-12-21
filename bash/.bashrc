@@ -22,6 +22,8 @@ alias npm="corepack npm"
 alias npx="corepack npx"
 
 # General env variables
+export EDITOR='vim'
+export VISUAL='vim'
 export HISTCONTROL='ignoredups'
 export HISTSIZE=5000
 export HISTFILESIZE=5000
