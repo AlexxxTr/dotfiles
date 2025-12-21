@@ -3,7 +3,7 @@
 if [[ $# -eq 1 ]]; then
     selected=$1
 else
-    selected=$(find ~/projects ~/projects/tig/tig-dpqa-cloud/branches -mindepth 1 -maxdepth 2 -type d | fzf --tmux)
+    selected=$(find ~/projects ~/projects/tig/tig-dpqa-cloud/branches -mindepth 1 -maxdepth 2 -type d 2>/dev/null | fzf --tmux)
 fi
 
 if [[ -z $selected ]]; then

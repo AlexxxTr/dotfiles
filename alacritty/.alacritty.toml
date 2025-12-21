@@ -7,7 +7,7 @@ import = [
 TERM = "xterm-256color"
 
 [terminal]
-shell = "/usr/bin/zsh"
+shell = "/usr/bin/bash"
 
 [window]
 dynamic_padding = false
@@ -18,20 +18,4 @@ padding.y = 5
 decorations= "buttonless"
 
 [font]
-size = 9
-
-[font.bold]
-family = "FiraCode Nerd Font Mono"
-style = "Heavy"
-
-[font.bold_italic]
-family = "FiraCode Nerd Font Mono"
-style = "Heavy Italic"
-
-[font.italic]
-family = "FiraCode Nerd Font Mono"
-style = "Italic"
-
-[font.normal]
-family = "FiraCode Nerd Font Mono"
-style = "Medium"
+size = 14
