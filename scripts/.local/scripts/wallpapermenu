@@ -1,13 +1,13 @@
 #!/bin/bash
 
-FOLDER=~/backgrounds
+FOLDER=~/wallpapers
 SCRIPT=pywal16
 
 menu () {
     CHOICE=$(nsxiv -otb $FOLDER/*)
 
     case $CHOICE in 
-        *.*) wal -i $CHOICE -o $SCRIPT ;;
+        *.*) wal -i "$CHOICE" -o $SCRIPT ;;
         *) exit 0 ;;
     esac
 }

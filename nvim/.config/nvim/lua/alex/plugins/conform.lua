@@ -14,8 +14,8 @@ return {
 			json = { "prettierd", "prettier", stop_after_first = true },
 			bash = { "shfmt" },
 			markdown = { "markdownlint-cli2" },
-            typst = { "prettypst" },
-            python = { "ruff", "black", stop_after_first = true },
+			typst = { "prettypst" },
+			python = { "ruff", "black", stop_after_first = true },
 		},
 	},
 	keys = {

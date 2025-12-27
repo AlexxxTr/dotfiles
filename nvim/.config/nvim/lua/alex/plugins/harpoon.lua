@@ -1,8 +1,8 @@
 return {
 	"theprimeagen/harpoon",
 	branch = "harpoon2",
-    lazy = true,
-    keys = { "<C-e>", "<leader>a", "<C-h>", "<C-j>", "<C-k>", "<C-l>" },
+	lazy = true,
+	keys = { "<C-e>", "<leader>a", "<C-h>", "<C-j>", "<C-k>", "<C-l>" },
 	config = function()
 		local harpoon = require("harpoon")
 		harpoon:setup({})

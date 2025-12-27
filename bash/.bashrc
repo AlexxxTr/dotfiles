@@ -92,6 +92,3 @@ make_prompt() {
 }
 
 make_prompt
-
-# source other files
-. ~/.bash_git_aliases || true

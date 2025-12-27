@@ -1,7 +1,7 @@
 return {
-    "vague2k/vague.nvim",
+    "folke/tokyonight.nvim",
     lazy = false,
     config = function()
-        vim.cmd("colorscheme vague")
+        vim.cmd("colorscheme tokyonight")
     end,
 }

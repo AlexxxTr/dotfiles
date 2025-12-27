@@ -11,7 +11,9 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
-require("lazy").setup("alex.plugins", {
+require("lazy").setup({
+    spec = "alex.plugins",
+    change_detection = { notify = false, },
 	ui = {
 		border = "rounded",
 	},

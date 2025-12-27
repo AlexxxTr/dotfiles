@@ -154,8 +154,6 @@ return {
 		servers = retrieve_server_setup(),
 	},
 	config = function(_, opts)
-		local lspconfig = vim.lsp.config
-
 		for server, config in pairs(opts.servers) do
 			-- passing config.capabilities to blink.cmp merges with the capabilities in your
 			-- `opts[server].capabilities, if you've defined it
